@@ -1,0 +1,121 @@
+{
+  "Name": "c9b2d378d2334f76981ea008",
+  "ResourceId": "/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policySetDefinitions/c9b2d378d2334f76981ea008",
+  "ResourceName": "c9b2d378d2334f76981ea008",
+  "ResourceType": "Microsoft.Authorization/policySetDefinitions",
+  "SubscriptionId": null,
+  "PolicySetDefinitionId": "/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policySetDefinitions/c9b2d378d2334f76981ea008",
+  "Properties": {
+    "Description": "Monitor and secure your Windows virtual machines, virtual machine scale sets, and Arc machines by deploying the Azure Monitor Agent extension and associating the machines with a specified Data Collection Rule. Deployment will occur on machines with supported OS images (or machines matching the provided list of images) in supported regions.",
+    "DisplayName": "Custom - Configure ARC Windows machines with a specific tag to run AMA using proxy and associate them to a Data Collection Rule",
+    "Metadata": {
+      "category": "Monitoring",
+      "version": "1.0.0",
+      "createdBy": "07f52fe5-f266-4552-9dcb-af47995355f0",
+      "createdOn": "2023-04-11T11:16:57.1477156Z",
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    "Parameters": {
+      "effect": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the execution of the policy.",
+          "portalReview": true
+        },
+        "allowedValues": [
+          "DeployIfNotExists",
+          "Disabled"
+        ],
+        "defaultValue": "DeployIfNotExists"
+      },
+      "listOfWindowsImageIdToInclude": {
+        "type": "array",
+        "metadata": {
+          "displayName": "Additional Virtual Machine Images",
+          "description": "List of virtual machine images that have supported Windows OS to add to scope. Example values: '/subscriptions/<subscriptionId>/resourceGroups/YourResourceGroup/providers/Microsoft.Compute/images/ContosoStdImage'"
+        },
+        "defaultValue": []
+      },
+      "DcrResourceId": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Data Collection Rule Resource Id",
+          "description": "Resource Id of the Data Collection Rule that the virtual machines in scope should point to.",
+          "portalReview": true
+        }
+      },
+      "proxyAddress": {
+        "type": "string",
+        "metadata": {
+          "displayName": "Proxy Address",
+          "description": "Set the proxy Address to use. Example: http://[address]:[port]",
+          "portalReview": true
+        }
+      },
+      "inclusionTagName": {
+        "type": "string",
+        "metadata": {
+          "displayName": "inclusion Tag Name",
+          "description": "Name of the tag to use for including VMs in the scope of this policy. This should be used along with the Inclusion Tag Value parameter.",
+          "portalReview": true
+        },
+        "defaultValue": "\"\""
+      },
+      "inclusionTagValue": {
+        "type": "array",
+        "metadata": {
+          "displayName": "inclusion Tag Value",
+          "description": "Value of the tag to use for including VMs in the scope of this policy (in case of multiple values, use a comma-separated list). This should be used along with the Inclusion Tag Name parameter.",
+          "portalReview": true
+        }
+      }
+    },
+    "PolicyDefinitionGroups": [],
+    "PolicyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "Custom - Configure Windows Arc-enabled machines with a specific tag to run Azure Monitor Agent using_1",
+        "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policyDefinitions/d1c0a0eb-5270-448f-9375-0ed8c5ed208e",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('effect')]"
+          },
+          "proxyAddress": {
+            "value": "[parameters('proxyAddress')]"
+          },
+          "inclusionTagName": {
+            "value": "[parameters('inclusionTagName')]"
+          },
+          "inclusionTagValue": {
+            "value": "[parameters('inclusionTagValue')]"
+          }
+        },
+        "groupNames": []
+      },
+      {
+        "policyDefinitionReferenceId": "Custom - Configure Windows Machines with a specific tag to be associated with a Data Collection Rule_1",
+        "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policyDefinitions/728fd7ab-876a-4519-aaf5-70707e7aa9e1",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('effect')]"
+          },
+          "listOfWindowsImageIdToInclude": {
+            "value": "[parameters('listOfWindowsImageIdToInclude')]"
+          },
+          "dcrResourceId": {
+            "value": "[parameters('DcrResourceId')]"
+          },
+          "inclusionTagName": {
+            "value": "[parameters('inclusionTagName')]"
+          },
+          "inclusionTagValue": {
+            "value": "[parameters('inclusionTagValue')]"
+          }
+        },
+        "groupNames": []
+      }
+    ],
+    "PolicyType": 1
+  }
+}

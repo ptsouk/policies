@@ -1,0 +1,5 @@
+Get-AzPolicySetDefinition -id '/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policySetDefinitions/c9b2d378d2334f76981ea008' | ConvertTo-Json -Depth 100 | Out-File 'C:\temp\Custom - Configure ARC Windows machines with a specific tag to run AMA using proxy and associate them to a Data Collection Rule.json'
+
+Get-AzPolicyDefinition -id '/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policyDefinitions/d1c0a0eb-5270-448f-9375-0ed8c5ed208e' | ConvertTo-Json -Depth 100 | Out-File 'C:\temp\Custom - Configure Windows Arc-enabled machines with a specific tag to run Azure Monitor Agent using proxy.json'
+
+Get-AzPolicyDefinition -id '/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policyDefinitions/728fd7ab-876a-4519-aaf5-70707e7aa9e1' | ConvertTo-Json -Depth 100 | Out-File 'C:\temp\Custom - Configure Windows Machines with a specific tag to be associated with a Data Collection Rule or Data Collection Endpoint.json'
