@@ -1,203 +1,185 @@
 {
-  "Name": "d1c0a0eb-5270-448f-9375-0ed8c5ed208e",
-  "ResourceId": "/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policyDefinitions/d1c0a0eb-5270-448f-9375-0ed8c5ed208e",
-  "ResourceName": "d1c0a0eb-5270-448f-9375-0ed8c5ed208e",
-  "ResourceType": "Microsoft.Authorization/policyDefinitions",
-  "SubscriptionId": null,
-  "Properties": {
-    "Description": "Automate the deployment of Azure Monitor Agent extension on your Windows Arc-enabled machines for collecting telemetry data from the guest OS. This policy will install the extension if the OS and region are supported and system-assigned managed identity is enabled, and skip install otherwise. Learn more: https://aka.ms/AMAOverview.",
-    "DisplayName": "Custom - Configure Windows Arc-enabled machines with a specific tag to run Azure Monitor Agent using proxy",
-    "Metadata": {
-      "category": "Monitoring",
-      "createdBy": "07f52fe5-f266-4552-9dcb-af47995355f0",
-      "createdOn": "2023-04-11T10:53:39.1682935Z",
-      "updatedBy": null,
-      "updatedOn": null
-    },
-    "Mode": "Indexed",
-    "Parameters": {
-      "effect": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Effect",
-          "description": "Enable or disable the execution of the policy."
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.HybridCompute/machines"
         },
-        "allowedValues": [
-          "DeployIfNotExists",
-          "Disabled"
+        {
+          "field": "Microsoft.HybridCompute/machines/osName",
+          "equals": "Windows"
+        },
+        {
+          "field": "location",
+          "in": [
+            "australiacentral",
+            "australiaeast",
+            "australiasoutheast",
+            "brazilsouth",
+            "canadacentral",
+            "canadaeast",
+            "centralindia",
+            "centralus",
+            "eastasia",
+            "eastus",
+            "eastus2",
+            "eastus2euap",
+            "francecentral",
+            "germanywestcentral",
+            "japaneast",
+            "japanwest",
+            "jioindiawest",
+            "koreacentral",
+            "koreasouth",
+            "northcentralus",
+            "northeurope",
+            "norwayeast",
+            "southafricanorth",
+            "southcentralus",
+            "southeastasia",
+            "southindia",
+            "swedencentral",
+            "switzerlandnorth",
+            "uaenorth",
+            "uksouth",
+            "ukwest",
+            "westcentralus",
+            "westeurope",
+            "westindia",
+            "westus",
+            "westus2",
+            "westus3"
+          ]
+        },
+        {
+          "field": "[concat('tags[', parameters('inclusionTagName'), ']')]",
+          "in": "[parameters('inclusionTagValue')]"
+        }
+      ]
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.HybridCompute/machines/extensions",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/cd570a14-e51a-42ad-bac8-bafd67325302"
         ],
-        "defaultValue": "DeployIfNotExists"
-      },
-      "proxyAddress": {
-        "type": "String",
-        "metadata": {
-          "displayName": "proxyAddress",
-          "description": "Set the proxy Address to use. Example: http://[address]:[port]"
-        }
-      },
-      "inclusionTagName": {
-        "type": "String",
-        "metadata": {
-          "displayName": "Inclusion Tag Name",
-          "description": "Name of the tag to use for including VMs in the scope of this policy. This should be used along with the Inclusion Tag Value parameter."
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.HybridCompute/machines/extensions/type",
+              "equals": "AzureMonitorWindowsAgent"
+            },
+            {
+              "field": "Microsoft.HybridCompute/machines/extensions/publisher",
+              "equals": "Microsoft.Azure.Monitor"
+            },
+            {
+              "field": "Microsoft.HybridCompute/machines/extensions/enableAutomaticUpgrade",
+              "equals": true
+            },
+            {
+              "field": "Microsoft.HybridCompute/machines/extensions/provisioningState",
+              "equals": "Succeeded"
+            }
+          ]
         },
-        "defaultValue": ""
-      },
-      "inclusionTagValue": {
-        "type": "Array",
-        "metadata": {
-          "displayName": "Inclusion Tag Values",
-          "description": "Value of the tag to use for including VMs in the scope of this policy (in case of multiple values, use a comma-separated list). This should be used along with the Inclusion Tag Name parameter."
-        }
-      }
-    },
-    "PolicyRule": {
-      "if": {
-        "allOf": [
-          {
-            "field": "type",
-            "equals": "Microsoft.HybridCompute/machines"
-          },
-          {
-            "field": "Microsoft.HybridCompute/machines/osName",
-            "equals": "Windows"
-          },
-          {
-            "field": "location",
-            "in": [
-              "australiacentral",
-              "australiaeast",
-              "australiasoutheast",
-              "brazilsouth",
-              "canadacentral",
-              "canadaeast",
-              "centralindia",
-              "centralus",
-              "eastasia",
-              "eastus",
-              "eastus2",
-              "eastus2euap",
-              "francecentral",
-              "germanywestcentral",
-              "japaneast",
-              "japanwest",
-              "jioindiawest",
-              "koreacentral",
-              "koreasouth",
-              "northcentralus",
-              "northeurope",
-              "norwayeast",
-              "southafricanorth",
-              "southcentralus",
-              "southeastasia",
-              "southindia",
-              "swedencentral",
-              "switzerlandnorth",
-              "uaenorth",
-              "uksouth",
-              "ukwest",
-              "westcentralus",
-              "westeurope",
-              "westindia",
-              "westus",
-              "westus2",
-              "westus3"
-            ]
-          },
-          {
-            "field": "[concat('tags[', parameters('inclusionTagName'), ']')]",
-            "in": "[parameters('inclusionTagValue')]"
-          }
-        ]
-      },
-      "then": {
-        "effect": "[parameters('effect')]",
-        "details": {
-          "type": "Microsoft.HybridCompute/machines/extensions",
-          "roleDefinitionIds": [
-            "/providers/Microsoft.Authorization/roleDefinitions/cd570a14-e51a-42ad-bac8-bafd67325302"
-          ],
-          "existenceCondition": {
-            "allOf": [
-              {
-                "field": "Microsoft.HybridCompute/machines/extensions/type",
-                "equals": "AzureMonitorWindowsAgent"
-              },
-              {
-                "field": "Microsoft.HybridCompute/machines/extensions/publisher",
-                "equals": "Microsoft.Azure.Monitor"
-              },
-              {
-                "field": "Microsoft.HybridCompute/machines/extensions/enableAutomaticUpgrade",
-                "equals": true
-              },
-              {
-                "field": "Microsoft.HybridCompute/machines/extensions/provisioningState",
-                "equals": "Succeeded"
-              }
-            ]
-          },
-          "deployment": {
-            "properties": {
-              "mode": "incremental",
-              "template": {
-                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                "contentVersion": "1.0.0.0",
-                "parameters": {
-                  "vmName": {
-                    "type": "string"
-                  },
-                  "location": {
-                    "type": "string"
-                  },
-                  "proxyAddress": {
-                    "type": "string"
-                  }
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "vmName": {
+                  "type": "string"
                 },
-                "variables": {
-                  "extensionName": "AzureMonitorWindowsAgent",
-                  "extensionPublisher": "Microsoft.Azure.Monitor",
-                  "extensionType": "AzureMonitorWindowsAgent"
+                "location": {
+                  "type": "string"
                 },
-                "resources": [
-                  {
-                    "name": "[concat(parameters('vmName'), '/', variables('extensionName'))]",
-                    "type": "Microsoft.HybridCompute/machines/extensions",
-                    "location": "[parameters('location')]",
-                    "apiVersion": "2022-11-10",
-                    "properties": {
-                      "publisher": "[variables('extensionPublisher')]",
-                      "type": "[variables('extensionType')]",
-                      "autoUpgradeMinorVersion": true,
-                      "enableAutomaticUpgrade": true,
-                      "settings": {
-                        "proxy": {
-                          "address": "[parameters('proxyAddress')]",
-                          "mode": "application",
-                          "auth": "false"
-                        }
+                "proxyAddress": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "extensionName": "AzureMonitorWindowsAgent",
+                "extensionPublisher": "Microsoft.Azure.Monitor",
+                "extensionType": "AzureMonitorWindowsAgent"
+              },
+              "resources": [
+                {
+                  "name": "[concat(parameters('vmName'), '/', variables('extensionName'))]",
+                  "type": "Microsoft.HybridCompute/machines/extensions",
+                  "location": "[parameters('location')]",
+                  "apiVersion": "2022-11-10",
+                  "properties": {
+                    "publisher": "[variables('extensionPublisher')]",
+                    "type": "[variables('extensionType')]",
+                    "autoUpgradeMinorVersion": true,
+                    "enableAutomaticUpgrade": true,
+                    "settings": {
+                      "proxy": {
+                        "address": "[parameters('proxyAddress')]",
+                        "mode": "application",
+                        "auth": "false"
                       }
                     }
                   }
-                ]
-              },
-              "parameters": {
-                "vmName": {
-                  "value": "[field('name')]"
-                },
-                "location": {
-                  "value": "[field('location')]"
-                },
-                "proxyAddress": {
-                  "value": "[parameters('proxyAddress')]"
                 }
+              ]
+            },
+            "parameters": {
+              "vmName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "proxyAddress": {
+                "value": "[parameters('proxyAddress')]"
               }
             }
           }
         }
       }
-    },
-    "PolicyType": 1
+    }
   },
-  "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/a6e09f1d-1f05-497b-b499-da099ced752f/providers/Microsoft.Authorization/policyDefinitions/d1c0a0eb-5270-448f-9375-0ed8c5ed208e"
+  "parameters": {
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "Enable or disable the execution of the policy."
+      },
+      "allowedValues": [
+        "DeployIfNotExists",
+        "Disabled"
+      ],
+      "defaultValue": "DeployIfNotExists"
+    },
+    "proxyAddress": {
+      "type": "String",
+      "metadata": {
+        "displayName": "proxyAddress",
+        "description": "Set the proxy Address to use. Example: http://[address]:[port]"
+      }
+    },
+    "inclusionTagName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Inclusion Tag Name",
+        "description": "Name of the tag to use for including VMs in the scope of this policy. This should be used along with the Inclusion Tag Value parameter."
+      },
+      "defaultValue": ""
+    },
+    "inclusionTagValue": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "Inclusion Tag Values",
+        "description": "Value of the tag to use for including VMs in the scope of this policy (in case of multiple values, use a comma-separated list). This should be used along with the Inclusion Tag Name parameter."
+      }
+    }
+  }
 }
